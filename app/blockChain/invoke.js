@@ -1,12 +1,5 @@
 "use strict";
-/*
- * Copyright IBM Corp All Rights Reserved
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-/*
- * Chaincode Invoke
- */
+
 
 var Fabric_Client = require("fabric-client");
 var path = require("path");
@@ -18,9 +11,9 @@ var fabric_client = new Fabric_Client();
 
 // setup the fabric network
 var channel = fabric_client.newChannel("mychannel");
-var peer = fabric_client.newPeer("grpc://localhost:7051");
+var peer = fabric_client.newPeer("grpc://172.17.239.196:7051");
 channel.addPeer(peer);
-var order = fabric_client.newOrderer("grpc://localhost:7050");
+var order = fabric_client.newOrderer("grpc://172.17.239.196:7050");
 channel.addOrderer(order);
 
 async function transaction(tnFunc, args) {
@@ -124,6 +117,7 @@ async function transaction(tnFunc, args) {
             resolve({ event_status: "TIMEOUT" }); //we could use reject(new Error('Trnasaction did not complete within 30 seconds'));
           }, 3000);
           event_hub.connect();
+
           event_hub.registerTxEvent(
             transaction_id_string,
             (tx, code) => {
